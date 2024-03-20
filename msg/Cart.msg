@@ -1,4 +1,0 @@
-std_msgs/String cart_name
-std_msgs/String cart_position
-std_msgs/Bool plug_connected
-std_msgs/String robot_with_cart

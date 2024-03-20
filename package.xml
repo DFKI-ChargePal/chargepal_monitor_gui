@@ -2,7 +2,7 @@
 <package format="2">
   <name>chargepal_monitor_gui</name>
   <version>0.0.0</version>
-  <description>The chargepal_monitor package</description>
+  <description>The chargepal_monitor_gui package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

@@ -1,0 +1,8 @@
+gui_demo_resume: false
+gui_demo_start: false
+gui_demo_stop: true
+gui_log: ''
+gui_loop_input: 0
+ongoing_action: ''
+ongoing_job: ''
+robot_current_loop: 0

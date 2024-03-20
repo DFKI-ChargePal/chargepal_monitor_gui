@@ -53,15 +53,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message2.msg
 # )
 
-## Generate services in the 'srv' folder
-add_service_files(
-  DIRECTORY srv
-  FILES
-  readRobotInfo.srv
-  updateRobotInfo.srv
-  readCartInfo.srv
-  updateCartInfo.srv
-)
+
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -74,7 +66,6 @@ add_service_files(
 generate_messages(
    DEPENDENCIES
    std_msgs
-   chargepal_monitor
  )
 
 ################################################
@@ -108,7 +99,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES chargepal_monitor
+#  LIBRARIES chargepal_monitor_gui
 #  CATKIN_DEPENDS message_generation rospy std_msg
 #  DEPENDS system_lib
 )
@@ -126,7 +117,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/chargepal_monitor.cpp
+#   src/${PROJECT_NAME}/chargepal_monitor_gui.cpp
 # )
 
 ## Add cmake target dependencies of the library
