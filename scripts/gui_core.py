@@ -38,37 +38,82 @@ class Chargepal_GUI_Core:
             two = ui.tab("ROBOT CONTROL")
         with ui.tab_panels(tabs, value=two).classes("w-full"):
             with ui.tab_panel(one):
+                with ui.row():
+                    ec_aas = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_aas.set_text(
+                            f"Error count arrive_at_station : {util.fetch_ec_aas()}"
+                        ),
+                    )
+                    ui.separator()
+                    ec_gh = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_gh.set_text(
+                            f"Error count go_home : {util.fetch_ec_gh()}"
+                        ),
+                    )
+                    ui.separator()
+                    ec_pic = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_pic.set_text(
+                            f"Error count pickup_cart : {util.fetch_ec_pic()}"
+                        ),
+                    )
+                    ui.separator()
+                    ec_plc = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_plc.set_text(
+                            f"Error count place_cart : {util.fetch_ec_plc()}"
+                        ),
+                    )
+                    ui.separator()
+                    ec_piads = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_piads.set_text(
+                            f"Error count plugin_ads : {util.fetch_ec_piads()}"
+                        ),
+                    )
+                    ui.separator()
+                    ec_poads = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: ec_poads.set_text(
+                            f"Error count plugout_ads : {util.fetch_ec_poads()}"
+                        ),
+                    )
+                    ui.separator()
+                    total_loop = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: total_loop.set_text(
+                            f"Total loop count: {util.fetch_total_loop()}"
+                        ),
+                    )
+                    ui.separator()
+                    avg_loop_time = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: avg_loop_time.set_text(
+                            f"Average loop time: {util.fetch_avg_loop_time()} minutes"
+                        ),
+                    )
 
-                error_count = util.fetch_error_count()
-                avg_loop_runtime = util.fetch_avg_loop_runtime()
-                loop_count = util.fetch_loop_count()
-
-                grid = ui.aggrid(
-                    {
-                        "defaultColDef": {"flex": 1},
-                        "columnDefs": [
-                            {"headerName": "Variable", "field": "variable"},
-                            {"headerName": "Value", "field": "value"},
-                        ],
-                        "rowData": [
-                            {
-                                "variable": "Error count",
-                                "value": error_count,
-                            },
-                            {
-                                "variable": "Average loop runtime",
-                                "value": avg_loop_runtime,
-                            },
-                            {
-                                "variable": "Number of loops",
-                                "value": loop_count,
-                            },
-                        ],
-                    }
-                ).classes("max-h-40")
-                ui.button("Update", on_click=lambda: send_request("update_statistics"))
             with ui.tab_panel(two):
                 with ui.row():
+
+                    loop_label = ui.label()
+                    ui.timer(
+                        1.0,
+                        lambda: loop_label.set_text(
+                            f"Loop : {util.fetch_current_loop()} remaining!"
+                        ),
+                    )
+                    ui.separator()
                     job_label = ui.label()
                     ui.timer(
                         1.0,
@@ -122,10 +167,26 @@ class Chargepal_GUI_Core:
                 with ui.expansion("Features", icon="star").classes("w-full"):
                     with ui.column():
                         with ui.dialog() as dialog_recover_arm, ui.card():
-
+                            recover_arm_status_label = ui.label()
+                            ui.timer(
+                                1.0,
+                                lambda: recover_arm_status_label.set_text(
+                                    f"Status : {util.fetch_ongoing_action()}"
+                                ),
+                            )
                             with ui.stepper().props("vertical").classes(
                                 "w-full"
                             ) as stepper:
+                                with ui.step("Restart the Node"):
+                                    ui.label("Restarts the manipulation node")
+                                    ui.button(
+                                        "Restart Node",
+                                        on_click=lambda: send_request(
+                                            "restart_arm_node"
+                                        ),
+                                    )
+
+                                    ui.button("Next", on_click=stepper.next)
                                 with ui.step("Free the Arm"):
                                     ui.label(
                                         "To free the arm, and move the arm out of failure position"
@@ -134,6 +195,10 @@ class Chargepal_GUI_Core:
                                         "Free Arm",
                                         on_click=lambda: send_request("free_arm"),
                                     )
+                                    ui.button(
+                                        "Stop Free Arm",
+                                        on_click=lambda: send_request("stop_free_arm"),
+                                    )
                                     with ui.stepper_navigation():
                                         ui.button("Next", on_click=stepper.next)
                                 with ui.step("Move to Home"):
@@ -141,19 +206,6 @@ class Chargepal_GUI_Core:
                                     ui.button(
                                         "Move Home",
                                         on_click=lambda: send_request("move_arm_home"),
-                                    )
-                                    with ui.stepper_navigation():
-                                        ui.button("Next", on_click=stepper.next)
-                                        ui.button(
-                                            "Back", on_click=stepper.previous
-                                        ).props("flat")
-                                with ui.step("Restart the Node"):
-                                    ui.label("Restarts the manipulation node")
-                                    ui.button(
-                                        "Restart Node",
-                                        on_click=lambda: send_request(
-                                            "restart_arm_node"
-                                        ),
                                     )
                                     with ui.stepper_navigation():
                                         ui.button(
@@ -165,6 +217,7 @@ class Chargepal_GUI_Core:
                                         ui.button(
                                             "Back", on_click=stepper.previous
                                         ).props("flat")
+
                             ui.button("Close", on_click=dialog_recover_arm.close)
 
                         with ui.dialog() as dialog_shutdown_orin, ui.card():

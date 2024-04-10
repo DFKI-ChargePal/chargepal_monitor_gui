@@ -1,3 +1,10 @@
+avg_loop_time: 1.5462077305555555
+error_count_arrive_at_station: 0
+error_count_go_home: 0
+error_count_pickup_cart: 0
+error_count_place_cart: 0
+error_count_plugin_ads: 0
+error_count_plugout_ads: 0
 gui_demo_resume: false
 gui_demo_start: false
 gui_demo_stop: true
@@ -6,3 +13,4 @@ gui_loop_input: 0
 ongoing_action: ''
 ongoing_job: ''
 robot_current_loop: 0
+total_loop_count: 6

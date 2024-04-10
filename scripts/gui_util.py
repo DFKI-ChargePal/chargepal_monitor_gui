@@ -4,6 +4,9 @@ import yaml
 import rospkg
 from typing import Union
 import os
+import actionlib
+import chargepal_actions.msg
+from chargepal_services.srv import stopFreeDriveArm
 
 from chargepal_services.srv import readRobotCharge
 
@@ -51,6 +54,8 @@ def execute_request(name):
         success = execute_resume_demo()
     elif name == "free_arm":
         success = execute_free_arm()
+    elif name == "stop_free_arm":
+        success = execute_stop_free_arm()
     elif name == "move_arm_home":
         success = execute_move_arm_home()
     elif name == "restart_arm_node":
@@ -69,6 +74,11 @@ def fetch_current_loop():
 def fetch_ongoing_action():
     config = read_config()
     return config["ongoing_action"]
+
+
+def fetch_loop_input():
+    config = read_config()
+    return config["gui_loop_input"]
 
 
 def fetch_job_name():
@@ -137,15 +147,43 @@ def execute_resume_demo():
 
 
 def execute_free_arm():
-    node_name = "your_node_name"
-    package_name = "package_name"
-    os.system("rosrun {} {}".format(package_name, node_name))
+    client = actionlib.SimpleActionClient(
+        "free_drive_arm", chargepal_actions.msg.FreeDriveArmAction
+    )
+    client.wait_for_server()
+    client.send_goal()
+    client.wait_for_result()
+    client.get_result()
+
+
+def execute_stop_free_arm():
+    try:
+        service_proxy_stop_free_drive_arm = rospy.ServiceProxy(
+            "/robot_arm/stop_free_drive_arm", stopFreeDriveArm
+        )
+        response = service_proxy_stop_free_drive_arm()
+        success = response.success
+        update_config("ongoing_action", f"Stop free drive arm is {success}")
+
+    except rospy.ServiceException as e:
+        update_config(
+            "ongoing_action",
+            f"ERROR:Unable to stop free drive arm. Error is {e}",
+        )
 
 
 def execute_move_arm_home():
-    node_name = "your_node_name"
-    package_name = "package_name"
-    os.system("rosrun {} {}".format(package_name, node_name))
+    client = actionlib.SimpleActionClient(
+        "move_home_arm", chargepal_actions.msg.MoveHomeArmAction
+    )
+    client.wait_for_server()
+    client.send_goal()
+    client.wait_for_result()
+    result = client.get_result()
+    update_config(
+        "ongoing_action",
+        f"move arm home is {result.success}",
+    )
 
 
 def execute_restart_arm_node():
@@ -170,8 +208,44 @@ def fetch_battery_level():
     return charge
 
 
-def fetch_error_count():
-    return 100.00
+def fetch_ec_aas():
+    config = read_config()
+    return config["error_count_arrive_at_station"]
+
+
+def fetch_ec_gh():
+    config = read_config()
+    return config["error_count_go_home"]
+
+
+def fetch_ec_pic():
+    config = read_config()
+    return config["error_count_pickup_cart"]
+
+
+def fetch_ec_plc():
+    config = read_config()
+    return config["error_count_place_cart"]
+
+
+def fetch_ec_piads():
+    config = read_config()
+    return config["error_count_plugin_ads"]
+
+
+def fetch_ec_poads():
+    config = read_config()
+    return config["error_count_plugout_ads"]
+
+
+def fetch_total_loop():
+    config = read_config()
+    return config["total_loop_count"]
+
+
+def fetch_avg_loop_time():
+    config = read_config()
+    return config["avg_loop_time"]
 
 
 def fetch_avg_loop_runtime():
