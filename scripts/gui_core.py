@@ -226,8 +226,71 @@ class Chargepal_GUI_Core:
                                 on_click=lambda: util.shutdown_orin(),
                             )
 
+                        with ui.dialog() as dialog_individual_actions, ui.card():
+
+                            with ui.row():
+                                options_sations = [
+                                    "ADS_1",
+                                    "ADS_1_pick",
+                                    "BWS_1",
+                                    "BWS_1_pick",
+                                ]
+                                with ui.input(
+                                    label="Station name", autocomplete=options_sations
+                                ) as i_station:
+                                    ui.space()
+                                    ui.button(
+                                        "arrive at station",
+                                        on_click=lambda: util.perform_arrive_at_station(
+                                            i_station.value
+                                        ),
+                                    )
+                                ui.separator()
+                                options_cart = ["BAT_1"]
+                                with ui.input(
+                                    label="Cart name", autocomplete=options_cart
+                                ) as i_cart:
+                                    ui.space()
+                                    ui.button(
+                                        "place cart",
+                                        on_click=lambda: util.perform_place_cart(
+                                            i_cart
+                                        ),
+                                    )
+                                ui.separator()
+                                options_cart = ["BAT_1"]
+                                with ui.input(
+                                    label="Cart name", autocomplete=options_cart
+                                ) as i_cart:
+                                    ui.space()
+                                    ui.button(
+                                        "pickup cart",
+                                        on_click=lambda: util.perform_pickup_cart(
+                                            i_cart.value
+                                        ),
+                                    )
+                                ui.separator()
+                                ui.button(
+                                    "plugin ads ac",
+                                    on_click=lambda: util.perform_plugin_ads_ac(),
+                                )
+                                ui.separator()
+                                ui.button(
+                                    "plugout ads ac",
+                                    on_click=lambda: util.perform_plugout_ads_ac(),
+                                )
+                                ui.separator()
+                                ui.button(
+                                    "arrive at home",
+                                    on_click=lambda: util.perform_arrive_at_home(),
+                                )
+
                         ui.button("RECOVER ARM", on_click=dialog_recover_arm.open)
                         ui.button("SHUTDOWN ORIN", on_click=dialog_shutdown_orin.open)
+                        ui.button(
+                            "INDIVIDUAL ROBOT ACTIONS",
+                            on_click=dialog_individual_actions.open,
+                        )
 
         ui.run()
 

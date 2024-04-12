@@ -13,6 +13,7 @@ from chargepal_services.srv import readRobotCharge
 rospack = rospkg.RosPack()
 gui_yaml_path = rospack.get_path("chargepal_monitor_gui") + "/cfg/gui.yaml"
 loop_input = 0
+block_action = False
 
 
 def shutdown_orin():
@@ -254,3 +255,101 @@ def fetch_avg_loop_runtime():
 
 def fetch_loop_count():
     return 100.00
+
+
+def perform_arrive_at_station(station_name):
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "arrive_at_station", chargepal_actions.msg.ArriveAtStationAction
+        )
+        client.wait_for_server()
+        goal = chargepal_actions.msg.ArriveAtStationGoal(target_station=station_name)
+        client.send_goal(goal)
+        client.wait_for_result()
+        block_action = False
+        client.get_result()
+
+
+def perform_arrive_at_home():
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "arrive_at_home", chargepal_actions.msg.ArriveAtHomeAction
+        )
+        client.wait_for_server()
+        goal = chargepal_actions.msg.ArriveAtHomeGoal(target_station="RBS_1")
+        client.send_goal(goal)
+        client.wait_for_result()
+        client.get_result()
+        block_action = False
+
+
+def perform_place_cart(cart_name):
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "place_charger", chargepal_actions.msg.PlaceChargerAction
+        )
+        client.wait_for_server()
+        goal = chargepal_actions.msg.PlaceChargerGoal(charger_name=cart_name)
+        client.send_goal(goal)
+        client.wait_for_result()
+        client.get_result()
+        block_action = False
+
+
+def perform_pickup_cart(cart_name):
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "pick_up_charger", chargepal_actions.msg.PickUpChargerAction
+        )
+        client.wait_for_server()
+        goal = chargepal_actions.msg.PickUpChargerGoal(charger_name=cart_name)
+        client.send_goal(goal)
+        client.wait_for_result()
+        client.get_result()
+        block_action = False
+
+
+def perform_plugin_ads_ac():
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "plugin_ads_ac", chargepal_actions.msg.PlugInAdsAcAction
+        )
+        client.wait_for_server()
+        client.send_goal()
+        client.wait_for_result()
+        client.get_result()
+        block_action = False
+
+
+def perform_plugout_ads_ac():
+    global block_action
+
+    if not block_action:
+        block_action = True
+        client = actionlib.SimpleActionClient(
+            "plugout_ads_ac", chargepal_actions.msg.PlugOutAdsAcAction
+        )
+        client.wait_for_server()
+        client.send_goal()
+        client.wait_for_result()
+        client.get_result()
+        block_action = False
+
+
+def perfrom_job(job):
+    print(job)
