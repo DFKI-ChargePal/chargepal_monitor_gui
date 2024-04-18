@@ -120,7 +120,7 @@ def execute_start_demo():
         }
 
         update_configs(updated_config)
-        update_config("gui_log", "Start clicked! Make sure to stop any ongoing demo.")
+        update_config("gui_log", "Start clicked! Press again only when no demo is running.")
     else:
         update_config("gui_log", "Enter number of demo loops")
 
@@ -150,7 +150,7 @@ def execute_resume_demo():
     }
 
     update_configs(updated_config)
-    update_config("gui_log", "Resume clicked. Make sure to stop any ongoing demo. ")
+    update_config("gui_log", "Resume clicked. Press again only when no demo is running. ")
 
     return True
 
@@ -162,9 +162,7 @@ def execute_free_arm():
     client.wait_for_server()
     goal = chargepal_actions.msg.FreeDriveArmGoal
     client.send_goal(goal)
-    # client.wait_for_result()
-    # result = client.get_result()
-    # print(result.success)
+
     return True
 
 
@@ -201,8 +199,7 @@ def execute_move_arm_home():
         "ongoing_action",
         f"move arm home is {result.success}",
     )
-    print(result.success)
-    return result.success
+    return True
 
 
 def fetch_battery_level():
@@ -346,7 +343,6 @@ def perform_plugin_ads_ac():
         )
         client.wait_for_server()
         goal = chargepal_actions.msg.PlugInAdsAcGoal()
-        print(goal)
         client.send_goal(goal)
         client.wait_for_result()
         client.get_result()
@@ -364,7 +360,6 @@ def perform_plugout_ads_ac():
         )
         client.wait_for_server()
         goal = chargepal_actions.msg.PlugOutAdsAcGoal()
-        print(goal)
         client.send_goal(goal)
         client.wait_for_result()
         client.get_result()

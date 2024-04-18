@@ -23,15 +23,12 @@ class Chargepal_GUI_Core:
             while not success:
                 n.message = "Executing..."
                 n.spinner = True
-                success = await util.execute_request(request_name, value)
-
-                await asyncio.sleep(0.2)
+                success = util.execute_request(request_name, value)
                 if success:
                     break
 
             n.message = "Done!"
             n.spinner = False
-            await asyncio.sleep(1)
             n.dismiss()
 
         with ui.tabs().classes("w-full") as tabs:
