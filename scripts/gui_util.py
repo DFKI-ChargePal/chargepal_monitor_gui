@@ -17,8 +17,7 @@ block_action = False
 
 
 def shutdown_orin():
-    os.system("shutdown /s /t 5")
-
+    os.system('systemctl poweroff') 
 
 def read_config():
     with open(gui_yaml_path, "r") as file:
@@ -46,7 +45,7 @@ def update_configs(updated_values):
         yaml.dump(data, file)
 
 
-def execute_request(name):
+def execute_request(name,value):
     if name == "click_start":
         success = execute_start_demo()
     elif name == "click_stop":
@@ -59,11 +58,20 @@ def execute_request(name):
         success = execute_stop_free_arm()
     elif name == "move_arm_home":
         success = execute_move_arm_home()
-    elif name == "restart_arm_node":
-        success = execute_restart_arm_node()
     elif name == "update_statistics":
         success = execute_update_statistics()
-
+    elif name == "perform_arrive_at_station":
+        success = perform_arrive_at_station(value)
+    elif name == "perform_place_cart":
+        success = perform_place_cart(value)
+    elif name == "perform_pickup_cart":
+        success = perform_pickup_cart(value)
+    elif name == "perform_plugin_ads_ac":
+        success = perform_plugin_ads_ac()
+    elif name == "perform_plugout_ads_ac":
+        success = perform_plugout_ads_ac()
+    elif name == "perform_arrive_at_home":
+        success = perform_arrive_at_home()
     return success
 
 
@@ -127,23 +135,21 @@ def execute_stop_demo():
 
     update_configs(updated_config)
     update_config(
-        "gui_log", "Stop clicked. Demo stopped! Press Resume to resume the demo."
+        "gui_log", "Stop clicked. Demo will be stopped after ongoing job. Press RESUME to resume the demo."
     )
     return True
 
 
 def execute_resume_demo():
-    if loop_input > 0:
-        updated_config = {
-            "gui_demo_stop": False,
-            "gui_demo_resume": True,
-            "gui_demo_start": False,
-        }
+    updated_config = {
+        "gui_demo_stop": False,
+        "gui_demo_resume": True,
+        "gui_demo_start": False,
+    }
 
-        update_configs(updated_config)
-        update_config("gui_log", "Resume clicked.")
-    else:
-        update_config("gui_log", "Enter number of demo loops")
+    update_configs(updated_config)
+    update_config("gui_log", "Resume clicked. Press STOP to stop the demo ")
+    
     return True
 
 
@@ -152,12 +158,16 @@ def execute_free_arm():
         "free_drive_arm", chargepal_actions.msg.FreeDriveArmAction
     )
     client.wait_for_server()
-    client.send_goal()
-    client.wait_for_result()
-    client.get_result()
+    goal = chargepal_actions.msg.FreeDriveArmGoal
+    client.send_goal(goal)
+    #client.wait_for_result()
+    #result = client.get_result()
+    #print(result.success)
+    return True 
 
 
 def execute_stop_free_arm():
+    rospy.wait_for_service("/robot_arm/stop_free_drive_arm")
     try:
         service_proxy_stop_free_drive_arm = rospy.ServiceProxy(
             "/robot_arm/stop_free_drive_arm", stopFreeDriveArm
@@ -165,32 +175,32 @@ def execute_stop_free_arm():
         response = service_proxy_stop_free_drive_arm()
         success = response.success
         update_config("ongoing_action", f"Stop free drive arm is {success}")
+        
+        return success 
 
     except rospy.ServiceException as e:
         update_config(
             "ongoing_action",
             f"ERROR:Unable to stop free drive arm. Error is {e}",
         )
+        return False 
 
 
 def execute_move_arm_home():
     client = actionlib.SimpleActionClient(
-        "move_home_arm", chargepal_actions.msg.MoveHomeArmAction
+        '/move_home_arm', chargepal_actions.msg.MoveHomeArmAction
     )
     client.wait_for_server()
-    client.send_goal()
+    goal = chargepal_actions.msg.MoveHomeArmGoal
+    client.send_goal(goal)
     client.wait_for_result()
     result = client.get_result()
     update_config(
         "ongoing_action",
         f"move arm home is {result.success}",
     )
-
-
-def execute_restart_arm_node():
-    node_name = "your_node_name"
-    package_name = "package_name"
-    os.system("rosrun {} {}".format(package_name, node_name))
+    print(result.success)
+    return result.success
 
 
 def fetch_battery_level():
@@ -206,7 +216,7 @@ def fetch_battery_level():
     except rospy.ServiceException as e:
         print(e)
 
-    return charge
+    return round(charge,2)
 
 
 def fetch_ec_aas():
@@ -259,7 +269,7 @@ def fetch_loop_count():
 
 def perform_arrive_at_station(station_name):
     global block_action
-
+    print("Block action is", block_action)
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
@@ -269,13 +279,14 @@ def perform_arrive_at_station(station_name):
         goal = chargepal_actions.msg.ArriveAtStationGoal(target_station=station_name)
         client.send_goal(goal)
         client.wait_for_result()
-        block_action = False
         client.get_result()
+        block_action = False
+    return True
 
 
 def perform_arrive_at_home():
     global block_action
-
+    print("Block action is", block_action)
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
@@ -287,11 +298,12 @@ def perform_arrive_at_home():
         client.wait_for_result()
         client.get_result()
         block_action = False
+    return True
 
 
 def perform_place_cart(cart_name):
     global block_action
-
+    print("Block action is", block_action)
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
@@ -303,11 +315,12 @@ def perform_place_cart(cart_name):
         client.wait_for_result()
         client.get_result()
         block_action = False
+    return True
 
 
 def perform_pickup_cart(cart_name):
     global block_action
-
+    print("Block action is", block_action)
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
@@ -319,21 +332,25 @@ def perform_pickup_cart(cart_name):
         client.wait_for_result()
         client.get_result()
         block_action = False
+    return True
+    
 
 
 def perform_plugin_ads_ac():
     global block_action
-
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
-            "plugin_ads_ac", chargepal_actions.msg.PlugInAdsAcAction
+            '/plug_in_ads_ac', chargepal_actions.msg.PlugInAdsAcAction
         )
         client.wait_for_server()
-        client.send_goal()
+        goal = chargepal_actions.msg.PlugInAdsAcGoal()
+        print(goal)
+        client.send_goal(goal)
         client.wait_for_result()
         client.get_result()
         block_action = False
+    return True
 
 
 def perform_plugout_ads_ac():
@@ -342,13 +359,16 @@ def perform_plugout_ads_ac():
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
-            "plugout_ads_ac", chargepal_actions.msg.PlugOutAdsAcAction
+            '/plug_out_ads_ac', chargepal_actions.msg.PlugOutAdsAcAction
         )
         client.wait_for_server()
-        client.send_goal()
+        goal = chargepal_actions.msg.PlugOutAdsAcGoal()
+        print(goal)
+        client.send_goal(goal)
         client.wait_for_result()
         client.get_result()
         block_action = False
+    return True
 
 
 def perfrom_job(job):

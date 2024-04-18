@@ -16,21 +16,24 @@ class Chargepal_GUI_Core:
             name = type(event.sender).__name__
             ui.notify(f"{name}: {event.value}")
 
-        def send_request(request_name):
+        async def send_request(request_name, value = None):
             success = False
+            ongoing = False
             n = ui.notification(timeout=None)
 
-            n.type = "ongoing"
-
-            while True:
-                n.message = f"Executing"
+            while not success and not ongoing:
+                ongoing = True
+                n.message = "Executing..."
                 n.spinner = True
-                success = util.execute_request(request_name)
+                success = await util.execute_request(request_name, value)
+                ongoing = False
+                await asyncio.sleep(0.2)
                 if success:
                     break
 
             n.message = "Done!"
             n.spinner = False
+            await asyncio.sleep(1)
             n.dismiss()
 
         with ui.tabs().classes("w-full") as tabs:
@@ -143,7 +146,7 @@ class Chargepal_GUI_Core:
                         ui.number(
                             label="Enter number of demo loops",
                             value=0,
-                            format="%.2f",
+                            format="%.0f",
                             on_change=lambda e: util.set_loop_count(e.value),
                         )
                     with ui.row():
@@ -177,16 +180,7 @@ class Chargepal_GUI_Core:
                             with ui.stepper().props("vertical").classes(
                                 "w-full"
                             ) as stepper:
-                                with ui.step("Restart the Node"):
-                                    ui.label("Restarts the manipulation node")
-                                    ui.button(
-                                        "Restart Node",
-                                        on_click=lambda: send_request(
-                                            "restart_arm_node"
-                                        ),
-                                    )
-
-                                    ui.button("Next", on_click=stepper.next)
+    
                                 with ui.step("Free the Arm"):
                                     ui.label(
                                         "To free the arm, and move the arm out of failure position"
@@ -241,7 +235,7 @@ class Chargepal_GUI_Core:
                                     ui.space()
                                     ui.button(
                                         "arrive at station",
-                                        on_click=lambda: util.perform_arrive_at_station(
+                                        on_click=lambda: send_request("perform_arrive_at_station",
                                             i_station.value
                                         ),
                                     )
@@ -253,8 +247,8 @@ class Chargepal_GUI_Core:
                                     ui.space()
                                     ui.button(
                                         "place cart",
-                                        on_click=lambda: util.perform_place_cart(
-                                            i_cart
+                                        on_click=lambda: send_request("perform_place_cart",
+                                            i_cart.value
                                         ),
                                     )
                                 ui.separator()
@@ -265,24 +259,24 @@ class Chargepal_GUI_Core:
                                     ui.space()
                                     ui.button(
                                         "pickup cart",
-                                        on_click=lambda: util.perform_pickup_cart(
+                                        on_click=lambda: send_request("perform_pickup_cart",
                                             i_cart.value
                                         ),
                                     )
                                 ui.separator()
                                 ui.button(
                                     "plugin ads ac",
-                                    on_click=lambda: util.perform_plugin_ads_ac(),
+                                    on_click=lambda: send_request("perform_plugin_ads_ac")
                                 )
                                 ui.separator()
                                 ui.button(
                                     "plugout ads ac",
-                                    on_click=lambda: util.perform_plugout_ads_ac(),
+                                    on_click=lambda: send_request("perform_plugout_ads_ac"),
                                 )
                                 ui.separator()
                                 ui.button(
                                     "arrive at home",
-                                    on_click=lambda: util.perform_arrive_at_home(),
+                                    on_click=lambda: send_request("perform_arrive_at_home"),
                                 )
 
                         ui.button("RECOVER ARM", on_click=dialog_recover_arm.open)
@@ -292,13 +286,19 @@ class Chargepal_GUI_Core:
                             on_click=dialog_individual_actions.open,
                         )
 
-        ui.run()
+        try:
+            ui.run(show=False)
+        except rospy.ROSInterruptException:
+
+            pass
 
 
 if __name__ in {"__main__", "__mp_main__"}:
     rospy.init_node("chargepal_gui")
+    
     try:
         core = Chargepal_GUI_Core()
         core.run_gui()
     except rospy.ROSInterruptException:
+
         pass
