@@ -17,7 +17,8 @@ block_action = False
 
 
 def shutdown_orin():
-    os.system('systemctl poweroff') 
+    os.system("systemctl poweroff")
+
 
 def read_config():
     with open(gui_yaml_path, "r") as file:
@@ -45,7 +46,7 @@ def update_configs(updated_values):
         yaml.dump(data, file)
 
 
-def execute_request(name,value):
+def execute_request(name, value):
     if name == "click_start":
         success = execute_start_demo()
     elif name == "click_stop":
@@ -119,7 +120,7 @@ def execute_start_demo():
         }
 
         update_configs(updated_config)
-        update_config("gui_log", "Start clicked!")
+        update_config("gui_log", "Start clicked! Make sure to stop any ongoing demo.")
     else:
         update_config("gui_log", "Enter number of demo loops")
 
@@ -135,7 +136,8 @@ def execute_stop_demo():
 
     update_configs(updated_config)
     update_config(
-        "gui_log", "Stop clicked. Demo will be stopped after ongoing job. Press RESUME to resume the demo."
+        "gui_log",
+        "Stop clicked. Demo will be stopped after ongoing job. Press RESUME to resume the demo.",
     )
     return True
 
@@ -148,8 +150,8 @@ def execute_resume_demo():
     }
 
     update_configs(updated_config)
-    update_config("gui_log", "Resume clicked. Press STOP to stop the demo ")
-    
+    update_config("gui_log", "Resume clicked. Make sure to stop any ongoing demo. ")
+
     return True
 
 
@@ -160,10 +162,10 @@ def execute_free_arm():
     client.wait_for_server()
     goal = chargepal_actions.msg.FreeDriveArmGoal
     client.send_goal(goal)
-    #client.wait_for_result()
-    #result = client.get_result()
-    #print(result.success)
-    return True 
+    # client.wait_for_result()
+    # result = client.get_result()
+    # print(result.success)
+    return True
 
 
 def execute_stop_free_arm():
@@ -175,20 +177,20 @@ def execute_stop_free_arm():
         response = service_proxy_stop_free_drive_arm()
         success = response.success
         update_config("ongoing_action", f"Stop free drive arm is {success}")
-        
-        return success 
+
+        return success
 
     except rospy.ServiceException as e:
         update_config(
             "ongoing_action",
             f"ERROR:Unable to stop free drive arm. Error is {e}",
         )
-        return False 
+        return False
 
 
 def execute_move_arm_home():
     client = actionlib.SimpleActionClient(
-        '/move_home_arm', chargepal_actions.msg.MoveHomeArmAction
+        "/move_home_arm", chargepal_actions.msg.MoveHomeArmAction
     )
     client.wait_for_server()
     goal = chargepal_actions.msg.MoveHomeArmGoal
@@ -216,7 +218,7 @@ def fetch_battery_level():
     except rospy.ServiceException as e:
         print(e)
 
-    return round(charge,2)
+    return round(charge, 2)
 
 
 def fetch_ec_aas():
@@ -333,7 +335,6 @@ def perform_pickup_cart(cart_name):
         client.get_result()
         block_action = False
     return True
-    
 
 
 def perform_plugin_ads_ac():
@@ -341,7 +342,7 @@ def perform_plugin_ads_ac():
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
-            '/plug_in_ads_ac', chargepal_actions.msg.PlugInAdsAcAction
+            "/plug_in_ads_ac", chargepal_actions.msg.PlugInAdsAcAction
         )
         client.wait_for_server()
         goal = chargepal_actions.msg.PlugInAdsAcGoal()
@@ -359,7 +360,7 @@ def perform_plugout_ads_ac():
     if not block_action:
         block_action = True
         client = actionlib.SimpleActionClient(
-            '/plug_out_ads_ac', chargepal_actions.msg.PlugOutAdsAcAction
+            "/plug_out_ads_ac", chargepal_actions.msg.PlugOutAdsAcAction
         )
         client.wait_for_server()
         goal = chargepal_actions.msg.PlugOutAdsAcGoal()
@@ -369,7 +370,3 @@ def perform_plugout_ads_ac():
         client.get_result()
         block_action = False
     return True
-
-
-def perfrom_job(job):
-    print(job)
