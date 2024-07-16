@@ -1,0 +1,13 @@
+[Robot]
+robot_names = [ "R1", "R2",]
+rbs = [ "S1", "S3",]
+
+[Cart]
+cart_names = [ "C2",]
+bws = [ "S2",]
+
+[ADS_Station]
+ads = []
+
+[BCS_Station]
+bcs = []

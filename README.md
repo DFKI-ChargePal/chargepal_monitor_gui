@@ -1,9 +1,5 @@
 # chargepal_monitor_gui
 
-- Inside the **chargepal_monitor_gui** folder, run `python3 -m http.server`
-- Open http://0.0.0.0:8000/
+- Inside the **chargepal_monitor_gui/scripts** folder, run `python3 gui_core.py`
+- Open http://localhost:8080/
 
-## ToDo
-- Launching the server from the Raspberry Pi 
-- Establish fetching and updating data from robot
-- ...
