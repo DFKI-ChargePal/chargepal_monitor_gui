@@ -2,7 +2,7 @@
 import os
 
 # Configuration and file paths
-server_dir = os.path.abspath(os.path.join(os.getcwd(), "..", ".."))
+server_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 envi_toml_file_path = os.path.join(server_dir, "chargepal_monitor_gui/cfg/envi.toml")
 databases_path = os.path.join(server_dir, "chargepal_local_server/src/chargepal_local_server/db")
 logs_path = os.path.join(server_dir, "chargepal_local_server/src/chargepal_local_server/logs")
