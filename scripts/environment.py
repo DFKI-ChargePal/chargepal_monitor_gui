@@ -41,10 +41,10 @@ def save_environment(tables):
         toml.dump(env_data, f)
     
     
-    for robot_name,robot_station in zip(env_data["Robot"]["robot_names"],env_data["Robot"]["rbs"]):
+    for robot_name,robot_station in zip(env_data["Robot"]["robot_names"],env_data["Robot"]["rbs_names"]):
         robot_data = (f"{robot_name}", f"{robot_station}",0, "none", "none", "none", "none","none",0, 0.0, 0)
         insert_robot_data(robot_data)
-    for cart_name,cart_station in zip(env_data["Cart"]["cart_names"],env_data["Cart"]["bws"]):
+    for cart_name,cart_station in zip(env_data["Cart"]["cart_names"],env_data["Cart"]["bws_names"]):
         cart_data = (f"{cart_name}", f"{cart_station}", "none", "none","none", 0)
         insert_cart_data(cart_data)
     

@@ -46,9 +46,9 @@ def create_tables():
             "align": "center",
         },
         {
-            "name": "rbs",
+            "name": "rbs_names",
             "label": "Station",
-            "field": "rbs",
+            "field": "rbs_names",
             "align": "center",
         },
     ]
@@ -56,19 +56,19 @@ def create_tables():
     cart_columns = [
         {"name": "cart_names", "label": "Cart", "field": "cart_names", "align": "center"},
         {
-            "name": "bws",
+            "name": "bws_names",
             "label": "Station",
-            "field": "bws",
+            "field": "bws_names",
             "align": "center",
         },
     ]
 
     ads_columns = [
-        {"name": "ads", "label": "ADS_Station", "field": "ads", "align": "center"},
+        {"name": "ads_names", "label": "ADS_Station", "field": "ads_names", "align": "center"},
     ]
 
     bcs_columns = [
-        {"name": "bcs", "label": "BCS_Station", "field": "bcs", "align": "center"},
+        {"name": "bcs_names", "label": "BCS_Station", "field": "bcs_names", "align": "center"},
     ]
 
     # Define the tables with columns and rows
@@ -160,9 +160,9 @@ def add_env_table_slots(tables: ui.table):
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                 </q-popup-edit>
             </q-td>
-            <q-td key="rbs" :props="props">
-                {{ props.row.rbs }}
-                <q-popup-edit v-model="props.row.rbs" v-slot="scope"
+            <q-td key="rbs_names" :props="props">
+                {{ props.row.rbs_names }}
+                <q-popup-edit v-model="props.row.rbs_names" v-slot="scope"
                     @update:model-value="() => $parent.$emit('rename', props.row)"
                 >
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -183,9 +183,9 @@ def add_env_table_slots(tables: ui.table):
                     @click="() => $parent.$emit('delete', props.row)"
                 />
             </q-td>
-            <q-td key="ads" :props="props">
-                {{ props.row.ads }}
-                <q-popup-edit v-model="props.row.ads" v-slot="scope"
+            <q-td key="ads_names" :props="props">
+                {{ props.row.ads_names }}
+                <q-popup-edit v-model="props.row.ads_names" v-slot="scope"
                     @update:model-value="() => $parent.$emit('rename', props.row)"
                 >
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -204,9 +204,9 @@ def add_env_table_slots(tables: ui.table):
                     @click="() => $parent.$emit('delete', props.row)"
                 />
             </q-td>
-            <q-td key="bcs" :props="props">
-                {{ props.row.bcs }}
-                <q-popup-edit v-model="props.row.bcs" v-slot="scope"
+            <q-td key="bcs_names" :props="props">
+                {{ props.row.bcs_names }}
+                <q-popup-edit v-model="props.row.bcs_names" v-slot="scope"
                     @update:model-value="() => $parent.$emit('rename', props.row)"
                 >
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
@@ -232,9 +232,9 @@ def add_env_table_slots(tables: ui.table):
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
                 </q-popup-edit>
             </q-td>
-            <q-td key="bws" :props="props">
-                {{ props.row.bws }}
-                <q-popup-edit v-model="props.row.bws" v-slot="scope"
+            <q-td key="bws_names" :props="props">
+                {{ props.row.bws_names }}
+                <q-popup-edit v-model="props.row.bws_names" v-slot="scope"
                     @update:model-value="() => $parent.$emit('rename', props.row)"
                 >
                     <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />

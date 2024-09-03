@@ -1,13 +1,13 @@
 [Robot]
-robot_names = [ "R1", "R2",]
-rbs = [ "S1", "S3",]
+robot_names = [ "ChargePal1",]
+rbs_names = [ "RBS_1",]
 
 [Cart]
-cart_names = [ "C2",]
-bws = [ "S2",]
+cart_names = [ "BAT_1",]
+bws_names = [ "BWS_1",]
 
 [ADS_Station]
-ads = []
+ads_names = [ "ADS_1",]
 
 [BCS_Station]
-bcs = []
+bcs_names = []
