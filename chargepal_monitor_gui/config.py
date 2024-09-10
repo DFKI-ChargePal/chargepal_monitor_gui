@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import toml
 
 monitor_gui_path = Path(__file__).parent

@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
-from nicegui import ui
-from env_table_components import create_tables, add_env_table_slots
-from environment import save_environment
-from database import (
-    initialize_database,
-    clear_database,
-    fetch_table_names,
-    fetch_table_data,
-)
-import config as cfg
-from typing import List, Dict
 import os
+from typing import Dict, List
+
+import config as cfg
+from database import (
+    clear_database,
+    fetch_table_data,
+    fetch_table_names,
+    initialize_database,
+)
+from env_table_components import add_env_table_slots, create_tables
+from environment import save_environment
+from nicegui import ui
 
 
 def create_header():
     with ui.header().style(
-        "display: flex; flex-direction: column; align-items: center; padding: 10px 10px; background: linear-gradient(180deg, purple, white); color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);"
+        """
+        display: flex; flex-direction: column; align-items: center; padding: 10px 10px; 
+        background: linear-gradient(180deg, purple, white); color: white; box-shadow: 0 
+        2px 4px rgba(0, 0, 0, 0.1);
+        """
     ):
         ui.label("ChargePal Cockpit").style(
             "font-size: 50px; font-weight: bold; margin-bottom: 3px;"
