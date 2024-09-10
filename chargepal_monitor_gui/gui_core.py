@@ -104,8 +104,8 @@ with ui.tab_panels(main_tabs, value=env).classes("w-full"):
             if os.path.isfile(file_path):
                 display_logs(basename, file_path)
 
-
+# Run the GUI application:
 create_header()
 ui.timer(1.0, lambda: display_table_data.refresh())
 ui.timer(1.0, lambda: display_logs.refresh())
-ui.run(port=8081)
+ui.run(port=cfg.gui_config["serve_port"])

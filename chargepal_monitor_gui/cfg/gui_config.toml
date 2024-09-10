@@ -1,3 +1,6 @@
+[gui]
+serve_port = 8089
+
 [server]
 # Directory of chargepal_local_server relative to your home directory:
 server_dir = './chargepal_local_server'

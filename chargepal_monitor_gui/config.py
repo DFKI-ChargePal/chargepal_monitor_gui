@@ -12,6 +12,8 @@ try:
     with open(gui_config_file_path, "r") as f:
         gui_config = toml.load(f)
         server_dir = Path.home().joinpath(gui_config["server"]["server_dir"])
+
+        gui_config = gui_config["gui"]
 except FileNotFoundError as e:
     raise e
 logs_path = server_dir / "src/chargepal_local_server/logs"
