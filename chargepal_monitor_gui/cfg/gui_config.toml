@@ -1,0 +1,3 @@
+[server]
+# Directory of chargepal_local_server relative to your home directory:
+server_dir = './Code/ChargePal/chargepal_local_server'
