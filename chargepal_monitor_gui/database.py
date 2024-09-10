@@ -55,10 +55,10 @@ def initialize_database():
 def clear_database():
     with sqlite3.connect(cfg.ldb_path) as conn_ldb:
         cursor_ldb = conn_ldb.cursor()
-        cursor_ldb.execute("DELETE FROM orders_in")
-        cursor_ldb.execute("DELETE FROM robot_info")
-        cursor_ldb.execute("DELETE FROM cart_info")
-        cursor_ldb.execute("DELETE FROM env_info")
+        cursor_ldb.execute('DELETE FROM orders_in')
+        cursor_ldb.execute('DELETE FROM robot_info')
+        cursor_ldb.execute('DELETE FROM cart_info')
+        cursor_ldb.execute('DELETE FROM env_info')
         conn_ldb.commit()
 
 
@@ -93,7 +93,7 @@ def insert_env_info(data):
     with sqlite3.connect(cfg.ldb_path) as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO env_info (name, value, count) VALUES (?,?,?)",
+            'INSERT INTO env_info (name, value, count) VALUES (?,?,?)',
             data,
         )
         conn.commit()
@@ -111,7 +111,7 @@ def fetch_table_names(db_path: str) -> List[str]:
 def fetch_table_data(db_path: str, table_name: str):
     with sqlite3.connect(db_path) as conn:
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM {table_name}")
+        cursor.execute(f'SELECT * FROM {table_name}')
         rows = cursor.fetchall()
 
         # Get column names
