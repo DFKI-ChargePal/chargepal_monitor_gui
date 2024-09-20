@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import marimo as mo
 import toml
 
 monitor_gui_path = Path(__file__).parent
@@ -24,3 +25,18 @@ pdb_path = databases_path / 'pdb.db'
 envi_toml_file_path = monitor_gui_path / 'cfg/envi.toml'
 dfki_logo_path = monitor_gui_path / 'img/dfki_logo.png'
 chargepal_logo_path = monitor_gui_path / 'img/chargepal_logo.svg'
+
+gui_sidebar = mo.sidebar(
+    [
+        mo.md('# ChargePal GUI'),
+        mo.nav_menu(
+            {
+                '/': 'Environment',
+                '/ldb': 'Local Database',
+                '/pdb': 'Planner Database',
+                '/logs': 'Logs',
+            },
+            orientation='vertical',
+        ),
+    ]
+)
