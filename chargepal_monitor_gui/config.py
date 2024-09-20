@@ -31,10 +31,10 @@ gui_sidebar = mo.sidebar(
         mo.md('# ChargePal GUI'),
         mo.nav_menu(
             {
-                '/': 'Environment',
-                '/ldb': 'Local Database',
-                '/pdb': 'Planner Database',
-                '/logs': 'Logs',
+                '/': f'{mo.icon("octicon:plus-circle-24")} Environment',
+                '/ldb': f'{mo.icon("octicon:database-24")} Local Database',
+                '/pdb': f'{mo.icon("octicon:database-24")} Planner Database',
+                '/logs': f'{mo.icon("octicon:log-24")} Logs',
             },
             orientation='vertical',
         ),
