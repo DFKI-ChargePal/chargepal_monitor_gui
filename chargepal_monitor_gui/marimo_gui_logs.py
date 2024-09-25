@@ -21,7 +21,16 @@ def __(mo):
 
 
 @app.cell
-def __(cfg, mo, os):
+def __(mo):
+    refresh_button = mo.ui.refresh(options=["5s", "10s", "30s"])
+    refresh_button
+
+    return refresh_button,
+
+
+@app.cell
+def __(cfg, mo, os, refresh_button):
+    refresh_button
     log_files = {}
     for file in os.listdir(cfg.logs_path):
         basename, extension = os.path.splitext(file)

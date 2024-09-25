@@ -46,7 +46,16 @@ def __(mo):
 
 
 @app.cell
-def __(get_table, mo):
+def __(mo):
+    refresh_button = mo.ui.refresh()
+    refresh_button
+
+    return refresh_button,
+
+
+@app.cell
+def __(get_table, mo, refresh_button):
+    refresh_button
     mo.ui.tabs(
         {
             'Robots': get_table('robot'),

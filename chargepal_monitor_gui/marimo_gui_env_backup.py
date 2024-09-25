@@ -32,7 +32,9 @@ def __(cfg, ldb, mo, refresh_button, robot_info):
     refresh_button
     _robot_info_df = mo.sql(
         f"""
-        USE ldb;
+        INSTALL sqlite;
+        LOAD sqlite;
+        ATTACH '{cfg.ldb_path}' AS ldb (TYPE SQLITE);
         SELECT * FROM ldb.main.robot_info;
         """
     )
