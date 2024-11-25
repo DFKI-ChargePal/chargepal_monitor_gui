@@ -1,38 +1,31 @@
 # chargepal_monitor_gui
 
-The chargepal_monitor_gui starts the **ChargePal Cockpit** application, that allows users to configure ChargePal environment information and monitor databases on the server.
+The chargepal_monitor_gui allows users to configure ChargePal environment information and monitor databases on the server.
 
 **Section: Set Environment**
 
-The application interacts with the `ldb.db` database, specifically updating the `env_info`,`robot_info`,`cart_info` table each time the user saves the environment settings from the cockpit. Note that previous entries in the `env_info` table are not considered when the cockpit is restarted; each session starts fresh.
+The application interacts with the `ldb.db` database, specifically updating the `env_info`, `robot_info` and `cart_info` tables.
 
-The environment configuration in the ChargePal Cockpit is divided into four sections:
-- Robot Details
-- Cart Details
-- ADS Station Details
-- BCS Station Details
-
-
-In each of these sections, users can add rows and populate them with relevant details. It is important to note the following associations:
-- Every robot is linked to a robot station.
-- Every cart is linked to a battery waiting station (BWS).
-
-These initial values are crucial for setting up the environment. When the user clicks the "Save Environment" button, the details entered in the cockpit are recorded into the `env_info`, `robot_info`, and `cart_info` tables within the `ldb.db` database, ensuring that all relevant information is stored appropriately.
-
+The GUI is divided into the two sections *Robot* and *Cart* for adding or updating respective entries.
 
 **Section: Local Database**
 
-Every table present inside `ldb.db` can be monitored. Refresh rate is 1Hz.
+Displays the local database `ldb.db`.
 
 **Section: Planner Database**
 
-Every table present inside `pdb.db` can be monitored. Refresh rate is 1Hz.
+Displays the planning database `pdb.db`.
+
+## Installation
+
+The GUI package is managed by [`uv`](https://docs.astral.sh/uv/). Therefore, clone the repository and execute `uv sync` for installing all necessary dependencies into a virtual environment.
 
 ## Execution
-- Inside the **chargepal_monitor_gui/scripts** folder, run `gui_core.py`
-- Open http://localhost:8080/ to view the **ChargePal Cockpit**
+
+1. Activate the virtual environment.
+2. Inside `chargepal_monitor_gui/chargepal_monitor_gui` run `python run_gui.py`.
+3. Open http://localhost:8089 (or `http://<server-ip>:8089` if the GUI runs on a remote server) to view the GUI. The serving port can be configured in [`gui_config.toml`](./chargepal_monitor_gui/cfg/gui_config.toml).
 
 ## Dependency
-- The [databases](https://git.ni.dfki.de/chargepal/system-integration/server-packages/chargepal_local_server/-/tree/main/src/chargepal_local_server/db?ref_type=heads) 
 
-
+Besides the dependencies defined in the [`pyproject.toml`](./pyproject.toml), the GUI needs [`chargepal_local_server`](https://github.com/DFKI-ChargePal/chargepal_local_server) with its `ldb.db`, `pdb.db` and robot logs. Configure the path of `chargepal_local_server` in the [`gui_config.toml`](./chargepal_monitor_gui/cfg/gui_config.toml).
