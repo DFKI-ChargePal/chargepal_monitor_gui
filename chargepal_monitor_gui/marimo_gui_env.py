@@ -13,6 +13,20 @@ def __():
     return cfg, mo, os
 
 
+# Uncomment the following lines for standalone execution of this notebook:
+# @app.cell
+# def __(cfg, mo):
+#     mo.sql(
+#         f"""
+#         INSTALL sqlite;
+#         LOAD sqlite;
+#         ATTACH '{cfg.ldb_path}' AS ldb (TYPE SQLITE);
+#         ATTACH '{cfg.pdb_path}' AS pdb (TYPE SQLITE);
+#         """
+#     )
+#     return ldb, pdb
+
+
 @app.cell
 def __(mo):
     mo.md(r"""# Set Environment""")
